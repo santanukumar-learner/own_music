@@ -18,13 +18,15 @@ offline.
 ## Prerequisites
 
 - **Python 3.11 or 3.12**
-- **libchromaprint** (the shared library, for in-memory fingerprinting):
-  - Windows: install Chromaprint and ensure the DLL is on PATH, or use
-    `conda install -c conda-forge chromaprint`.
-  - macOS: `brew install chromaprint`
-  - Linux: `apt install libchromaprint-tools libchromaprint1`
-  - If it's missing, fingerprinting is skipped and the pipeline falls back to
-    MusicBrainz text search (lower hit rate, still works).
+- **Chromaprint `fpcalc`** executable (for fingerprinting). Raw PCM is piped to
+  it over **stdin**, so no temp files are written.
+  - Download from https://acoustid.org/chromaprint and place `fpcalc`
+    (`fpcalc.exe` on Windows) in this `service/` folder, **or** set
+    `FPCALC=/path/to/fpcalc`, **or** put it on PATH.
+  - macOS: `brew install chromaprint`; Linux: `apt install libchromaprint-tools`.
+  - If `fpcalc` is missing (or no AcoustID key is set), fingerprinting is skipped
+    and the pipeline falls back to MusicBrainz text search — lower hit rate, still
+    works.
 - **ffmpeg** (recommended) for broad audio-format decoding support.
 - Optional: an [AcoustID API key](https://acoustid.org/new-application),
   [Last.fm key](https://www.last.fm/api/account/create),
