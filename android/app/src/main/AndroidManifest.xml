@@ -29,8 +29,11 @@
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true">
-        <!-- usesCleartextTraffic=true: the optional Python enrichment service runs
-             over plain HTTP on the local network. No audio ever leaves the device. -->
+        <!-- usesCleartextTraffic=true: the Python enrichment service runs over plain
+             HTTP on your local network. Audio is sent ONLY to that LAN service (for
+             fingerprinting + feature extraction) and is deleted there immediately
+             after processing — never to any cloud or third-party server. Only
+             fingerprints and text queries go to AcoustID / MusicBrainz. -->
 
         <activity
             android:name=".MainActivity"

@@ -126,8 +126,11 @@ repositories), `lib/ml` (HNSW index, ALS trainer, ONNX runner, feature extractor
 `POST_NOTIFICATIONS` (API 33+), `RECEIVE_BOOT_COMPLETED` (WorkManager),
 `INTERNET` + `ACCESS_NETWORK_STATE` (enrichment + LAN service).
 
-`usesCleartextTraffic="true"` is set only so the app can reach the optional
-HTTP enrichment service on your local network. **No audio is ever uploaded.**
+`usesCleartextTraffic="true"` is set only so the app can reach the
+HTTP enrichment service on your local network. **Audio is sent only to your own
+LAN service** (for fingerprinting + librosa feature extraction), where it is
+deleted immediately after processing — never to any cloud or third party. Only
+content fingerprints and text queries reach AcoustID / MusicBrainz / Last.fm.
 
 ---
 
@@ -167,10 +170,10 @@ git commit -m "Deliverable 1: project scaffold"
 
 ## Deliverables roadmap
 
-1. ✅ **Project scaffold + pinned `pubspec.yaml` + Android config** ← you are here
-2. ⬜ Isar schema (5 collections + indices)
-3. ⬜ Python enrichment service (acoustid / musicbrainz / genre-mood ONNX / features)
-4. ⬜ Dart ↔ service isolate runner
+1. ✅ **Project scaffold + pinned `pubspec.yaml` + Android config**
+2. ✅ **Isar schema (5 collections + indices)** — `lib/data/`
+3. ✅ **Python enrichment service** (acoustid / musicbrainz / genre-mood ONNX / features) — `service/`
+4. ⬜ Dart ↔ service isolate runner ← next
 5. ⬜ WorkManager tasks (LibraryScan / MetadataEnrichment / ModelRetrain)
 6. ⬜ HNSW index manager
 7. ⬜ ALS trainer + inference

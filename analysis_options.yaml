@@ -5,6 +5,11 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "build/**"
+    # Flutter SDK was cloned into the project; never analyze it (or the scratch
+    # project used to backfill platform binaries). Better: move the SDK out to
+    # C:\src\flutter so it isn't inside the project at all.
+    - "flutter/**"
+    - "scratch_app/**"
   errors:
     # Riverpod codegen places annotations on members; silence the false positive.
     invalid_annotation_target: ignore

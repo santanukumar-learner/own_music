@@ -9,14 +9,16 @@ import os
 import shutil
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
+
 try:  # python-dotenv is optional; absence just means rely on real env vars.
     from dotenv import load_dotenv
 
-    load_dotenv()
+    # Load THIS service's .env explicitly, independent of the current working
+    # directory (so `uvicorn app:app --app-dir service` from the repo root works).
+    load_dotenv(BASE_DIR / ".env")
 except Exception:  # pragma: no cover - optional dependency
     pass
-
-BASE_DIR = Path(__file__).resolve().parent
 
 
 def _get(name: str, default: str = "") -> str:

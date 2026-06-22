@@ -1,9 +1,9 @@
-/// Centralized allowed values for the String-typed "enum" fields on the Isar
-/// collections.
-///
-/// The database schema stores these as plain `String` (per spec), but the rest
-/// of the app references them through these constants instead of magic strings,
-/// so typos surface at compile time and the valid sets live in one place.
+// Centralized allowed values for the String-typed "enum" fields on the Isar
+// collections.
+//
+// The database schema stores these as plain `String` (per spec), but the rest
+// of the app references them through these constants instead of magic strings,
+// so typos surface at compile time and the valid sets live in one place.
 
 /// [Song.metadataStatus] values — the enrichment lifecycle of a track.
 abstract final class MetadataStatus {
