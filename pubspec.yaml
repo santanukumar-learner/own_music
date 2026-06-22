@@ -1,0 +1,89 @@
+# Sonata — offline-first personal music player with an on-device AI recommender.
+#
+# Dependency policy: EXACT pinned versions (no caret ranges) per project spec.
+# All versions verified against pub.dev on 2026-06-23. Commit pubspec.lock too.
+#
+# NOTE ON ISAR: stock `isar` 3.1.0+1 caps at Dart SDK <3.0.0 and cannot resolve
+# on a modern (Dart 3) toolchain. We use the maintained, API-compatible community
+# fork `isar_community` (+ flutter_libs + generator) instead. Same @collection
+# annotations, same build_runner codegen, same query API.
+
+name: music_recommender
+description: "Offline-first personal music player with an on-device AI recommendation engine."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  # Floor is set by the highest-requirement deps (path_provider, isar_community_generator).
+  # Use the latest stable Flutter (which ships Dart >= 3.10).
+  sdk: ">=3.10.0 <4.0.0"
+  flutter: ">=3.35.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: 1.0.8
+
+  # --- Audio engine: playback + background service + lock-screen controls ---
+  just_audio: 0.10.5
+  audio_service: 0.18.18
+  audio_session: 0.2.3
+
+  # --- Local DB (embedded NoSQL). Community fork = Dart 3 compatible Isar. ---
+  isar_community: 3.3.2
+  isar_community_flutter_libs: 3.3.2
+
+  # --- Library scanning (MediaStore) + runtime permissions ---
+  on_audio_query: 2.9.0
+  permission_handler: 12.0.3
+
+  # --- Networking: web enrichment + LAN enrichment service ---
+  dio: 5.9.2
+  dio_smart_retry: 7.0.1
+
+  # --- State management (Riverpod, manual AsyncNotifier/Notifier pattern) ---
+  # NOTE: riverpod_generator (codegen) is intentionally omitted. It requires
+  # analyzer ^12, which conflicts with isar_community_generator (analyzer <11).
+  # We use the class-based AsyncNotifier/Notifier API directly instead — same
+  # pattern, no generated providers.
+  flutter_riverpod: 3.3.2
+
+  # --- Theming: dynamic accent color extracted from album art ---
+  palette_generator: 0.3.3+7   # canonical replacement for the (nonexistent) palette_dart
+  dynamic_color: 1.8.1
+  flutter_animate: 4.5.2
+
+  # --- Background processing (LibraryScan / Enrichment / ModelRetrain) ---
+  workmanager: 0.9.0+3
+
+  # --- On-device ML + linear algebra (genre/mood ONNX, vector math) ---
+  onnxruntime: 1.4.1
+  ml_linalg: 13.12.7
+
+  # --- Now Playing visualizer (canonical replacement for stale flutter_visualizers) ---
+  audio_visualizer: 1.1.0
+
+  # --- Utilities ---
+  path_provider: 2.1.6
+  path: 1.9.1
+  shared_preferences: 2.5.5
+  cached_network_image: 3.4.1
+  flutter_cache_manager: 3.4.1
+  shimmer: 3.0.0                # skeleton loaders while enriching
+  crypto: 3.0.7                 # artist_id_hash for feature vectors
+  collection: 1.19.1
+  rxdart: 0.28.0               # stream combine for player state
+  visibility_detector: 0.4.0+2
+  fuzzywuzzy: 1.2.0            # fuzzy library search
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: 6.0.0
+  build_runner: 2.15.0
+  isar_community_generator: 3.3.2
+
+flutter:
+  uses-material-design: true
+  # The ONNX genre/mood model is NOT bundled (keeps APK < 80 MB). It is fetched
+  # on first run to the app documents dir and loaded lazily. See README.

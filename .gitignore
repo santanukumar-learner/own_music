@@ -1,0 +1,61 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ / Android Studio / VS Code
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+
+# Flutter / Dart / Pub
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+# NOTE: pubspec.lock IS committed for application projects (reproducible,
+# pinned builds). Do not ignore it.
+
+# Symbolication / obfuscation
+app.*.symbols
+app.*.map.json
+
+# Android
+android/.gradle/
+android/captures/
+android/local.properties
+android/key.properties
+android/**/GeneratedPluginRegistrant.java
+android/app/debug/
+android/app/profile/
+android/app/release/
+*.jks
+*.keystore
+
+# Flutter SDK accidentally cloned into the project, and scratch project used to
+# backfill platform binaries. The SDK should live outside the project (e.g.
+# C:\src\flutter); ignored here so it never gets committed.
+flutter/
+scratch_app/
+
+# Python LAN enrichment service (deliverable 3)
+service/.venv/
+service/__pycache__/
+service/**/__pycache__/
+service/*.egg-info/
+.env
+
+# On-device models / caches (fetched at runtime, never committed)
+*.onnx
