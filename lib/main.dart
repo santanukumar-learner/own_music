@@ -1,18 +1,22 @@
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// Fallback accent used until a dominant color is extracted from album art
-/// (deep purple, per the design spec).
+import 'library/library_screen.dart';
+import 'settings/settings_providers.dart';
+
+/// Fallback accent (deep purple) until a dominant color is extracted from album
+/// art in a later deliverable.
 const Color kFallbackAccent = Color(0xFF7F77DD);
 
-/// AMOLED-safe true black background.
+/// AMOLED-safe true black.
 const Color kTrueBlack = Color(0xFF000000);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Edge-to-edge, dark system bars over true black.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -22,7 +26,20 @@ Future<void> main() async {
     ),
   );
 
-  runApp(const ProviderScope(child: SonataApp()));
+  // Configure the platform audio session for music (audio focus, ducking,
+  // pause-on-headphone-unplug). Background/lock-screen controls arrive with the
+  // audio_service integration (deliverable 11).
+  final session = await AudioSession.instance;
+  await session.configure(const AudioSessionConfiguration.music());
+
+  final prefs = await SharedPreferences.getInstance();
+
+  runApp(
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      child: const SonataApp(),
+    ),
+  );
 }
 
 class SonataApp extends StatelessWidget {
@@ -39,61 +56,20 @@ class SonataApp extends StatelessWidget {
       title: 'Sonata',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
-      theme: _buildTheme(scheme),
-      darkTheme: _buildTheme(scheme),
-      home: const ScaffoldReadyScreen(),
-    );
-  }
-
-  ThemeData _buildTheme(ColorScheme scheme) {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      colorScheme: scheme,
-      scaffoldBackgroundColor: kTrueBlack,
-      canvasColor: kTrueBlack,
-      splashFactory: InkSparkle.splashFactory,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: kTrueBlack,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-      ),
-    );
-  }
-}
-
-/// Temporary landing screen. Confirms the scaffold runs end-to-end on device;
-/// replaced by the Library screen in deliverable 9.
-class ScaffoldReadyScreen extends StatelessWidget {
-  const ScaffoldReadyScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.graphic_eq_rounded, size: 72, color: scheme.primary),
-            const SizedBox(height: 24),
-            Text(
-              'Sonata',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.5,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Scaffold ready · deliverable 1 complete',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white60,
-                  ),
-            ),
-          ],
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorScheme: scheme,
+        scaffoldBackgroundColor: kTrueBlack,
+        canvasColor: kTrueBlack,
+        splashFactory: InkSparkle.splashFactory,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: kTrueBlack,
+          elevation: 0,
+          scrolledUnderElevation: 0,
         ),
       ),
+      home: const LibraryScreen(),
     );
   }
 }

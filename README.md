@@ -173,11 +173,14 @@ git commit -m "Deliverable 1: project scaffold"
 1. ✅ **Project scaffold + pinned `pubspec.yaml` + Android config**
 2. ✅ **Isar schema (5 collections + indices)** — `lib/data/`
 3. ✅ **Python enrichment service** (acoustid / musicbrainz / genre-mood ONNX / features) — `service/`
-4. ⬜ Dart ↔ service isolate runner ← next
+4. ✅ **Dart ↔ service enrichment bridge** — `lib/enrichment/` (client, contract models, 134-d feature vector) + `lib/data/song_repository.dart` + settings (service URL)
+   - Plus: basic on-device player (scan/list/play/mini-player) confirmed working on device.
 5. ⬜ WorkManager tasks (LibraryScan / MetadataEnrichment / ModelRetrain)
-6. ⬜ HNSW index manager
-7. ⬜ ALS trainer + inference
-8. ⬜ `RecommenderService.getNextSong()`
+6. ✅ **Recommender core** — `lib/recommender/` cosine similarity + content ranking + context re-rank (time-of-day energy, last-2h suppression, thumb boost/penalty, genre diversity). 16/16 unit tests pass.
+   - NOTE: uses **brute-force cosine** (sub-ms for a personal library) rather than HNSW/hnswlib — that's a Python/C++ lib with no Dart binding, and ANN is unnecessary at personal scale. Revisit only if a library exceeds ~50k tracks.
+7. ⬜ ALS trainer + inference (collaborative, from play history)
+8. ⬜ `RecommenderService.getNextSong()` wiring (blend + cache) + autoplay
+   - Remaining for a live on-device demo: settings field for the service URL, scan→enrich orchestration (deliverable 5), autoplay-on-complete.
 9. ⬜ All 6 screens + Riverpod providers
 10. ⬜ "Why this song?" explainability sheet
 11. ⬜ Background audio service (lock screen / notification / headset)
